@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WakaTax Nigeria — 2026 Tax Calculator | NaijaMoneyGuide</title>
+<meta name="description" content="Free Nigeria 2026 tax calculator based on the Nigeria Tax Act 2025. Know exactly what tax you owe — salary earners, freelancers, traders.">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;background:#f0f4f0;color:#1a1a1a;min-height:100vh}
+  header{background:#0A4D2C;color:#fff;padding:20px 16px;text-align:center}
+  header h1{font-size:1.6rem;margin-bottom:4px}
+  header p{font-size:.85rem;color:#aaddbb;margin-bottom:2px}
+  .brand{font-size:.75rem;color:#6bbb8b;margin-top:6px}
+  .container{max-width:640px;margin:0 auto;padding:16px}
+  .card{background:#fff;border-radius:10px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .card h2{color:#0A4D2C;font-size:1rem;margin-bottom:14px;border-bottom:2px solid #e0ede6;padding-bottom:8px}
+  label{display:block;font-size:.85rem;font-weight:bold;color:#333;margin-bottom:4px;margin-top:12px}
+  input[type=number],select{width:100%;padding:10px 12px;border:2px solid #ddd;border-radius:6px;font-size:.95rem;transition:border-color .2s}
+  input[type=number]:focus,select:focus{outline:none;border-color:#0A4D2C}
+  .naira-wrap{position:relative}
+  .naira-wrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#666;font-size:.95rem}
+  .naira-wrap input{padding-left:26px}
+  .btn{display:block;width:100%;padding:14px;background:#0A4D2C;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;margin-top:16px;transition:background .2s}
+  .btn:hover{background:#1A7A40}
+  .results{display:none}
+  .summary-box{background:#0A4D2C;border-radius:10px;padding:20px;color:#fff;text-align:center;margin-bottom:16px}
+  .summary-box .big-num{font-size:2rem;font-weight:bold;color:#FFD700;margin:4px 0}
+  .summary-box .sub{font-size:.8rem;color:#aaddbb}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .stat-box{background:#f9f9f9;border:1px solid #e0ede6;border-radius:8px;padding:14px;text-align:center}
+  .stat-box .val{font-size:1.3rem;font-weight:bold;color:#0A4D2C;margin:4px 0}
+  .stat-box .lbl{font-size:.75rem;color:#666}
+  .bands-table{width:100%;border-collapse:collapse;font-size:.82rem}
+  .bands-table th{background:#0A4D2C;color:#fff;padding:8px 10px;text-align:left}
+  .bands-table td{padding:8px 10px;border-bottom:1px solid #eee}
+  .bands-table tr:last-child td{border-bottom:none}
+  .bands-table tr:nth-child(even) td{background:#f5fbf7}
+  .zero{color:#888}
+  .active-band td{background:#e8f5ee!important;font-weight:bold}
+  .disclaimer{background:#fff8e1;border-left:4px solid #E8A020;border-radius:6px;padding:14px;font-size:.78rem;color:#555;margin-top:16px;line-height:1.6}
+  .disclaimer strong{color:#333}
+  .disclaimer a{color:#0A4D2C}
+  .cta{background:#0D47A1;border-radius:10px;padding:18px;color:#fff;text-align:center;margin-top:16px}
+  .cta h3{margin-bottom:6px;font-size:.95rem}
+  .cta a{display:inline-block;margin-top:10px;padding:10px 22px;background:#FFD700;color:#1a1a1a;border-radius:6px;font-weight:bold;text-decoration:none;font-size:.9rem}
+  .cta .yt{display:inline-block;margin-top:8px;padding:8px 18px;background:rgba(255,255,255,.15);color:#fff;border-radius:6px;font-size:.8rem;text-decoration:none;margin-left:8px}
+  footer{text-align:center;padding:20px 16px;font-size:.75rem;color:#888;background:#0A4D2C;color:#6bbb8b;margin-top:20px}
+  @media(max-width:400px){.grid-2{grid-template-columns:1fr}.summary-box .big-num{font-size:1.6rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧮 WakaTax Nigeria 2026</h1>
+  <p>Free Personal Income Tax Calculator — Nigeria Tax Act 2025</p>
+  <div class="brand">By Sunny Aniekan Simonson &nbsp;|&nbsp; NaijaMoneyGuide &nbsp;|&nbsp; WakaTax 1.0</div>
+</header>
+
+<div class="container">
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <h2>📝 Enter Your Details</h2>
+
+    <label for="workerType">I am a...</label>
+    <select id="workerType" onchange="updateHints()">
+      <option value="salary">Salary Earner (monthly pay from employer)</option>
+      <option value="freelancer">Freelancer / Self-Employed / Contractor</option>
+      <option value="trader">Trader / Market Seller / Business Owner</option>
+      <option value="artisan">Artisan / Keke / Driver / Craftsperson</option>
+    </select>
+
+    <label for="monthly">Monthly Gross Income (₦)</label>
+    <div class="naira-wrap">
+      <span>₦</span>
+      <input type="number" id="monthly" placeholder="e.g. 150000" min="0" oninput="clearResults()">
+    </div>
+    <div id="hint" style="font-size:.78rem;color:#666;margin-top:4px"></div>
+
+    <label for="passthru">Pass-Through Funds to Subtract (₦) <span style="font-weight:normal;color:#888">— optional</span></label>
+    <div class="naira-wrap">
+      <span>₦</span>
+      <input type="number" id="passthru" placeholder="e.g. 50000 — money you collect for clients" min="0" oninput="clearResults()">
+    </div>
+    <div style="font-size:.77rem;color:#888;margin-top:3px">Money a client gives you to spend on their behalf (materials, supplies). Only your fee is taxable.</div>
+
+    <label for="pension">Monthly Pension / RSA Contribution (₦) <span style="font-weight:normal;color:#888">— optional</span></label>
+    <div class="naira-wrap">
+      <span>₦</span>
+      <input type="number" id="pension" placeholder="Typically 8% of basic salary" min="0" oninput="clearResults()">
+    </div>
+
+    <label for="nhf">Monthly NHF / NHIS Deductions (₦) <span style="font-weight:normal;color:#888">— optional</span></label>
+    <div class="naira-wrap">
+      <span>₦</span>
+      <input type="number" id="nhf" placeholder="National Housing Fund + health insurance" min="0" oninput="clearResults()">
+    </div>
+
+    <button class="btn" onclick="calculate()">⚡ CALCULATE MY TAX</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <div class="summary-box">
+      <div class="sub">ANNUAL TAX YOU OWE</div>
+      <div class="big-num" id="r-annual-tax">—</div>
+      <div class="sub">Set aside <strong id="r-monthly-tax" style="color:#FFD700">—</strong> every month</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="stat-box">
+        <div class="lbl">Effective Tax Rate</div>
+        <div class="val" id="r-eff-rate">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="lbl">Monthly Take-Home</div>
+        <div class="val" id="r-takehome">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="lbl">Annual Gross Income</div>
+        <div class="val" id="r-annual-gross">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="lbl">Taxable Income</div>
+        <div class="val" id="r-taxable">—</div>
+      </div>
+    </div>
+
+    <!-- BAND BREAKDOWN -->
+    <div class="card">
+      <h2>📊 Band Breakdown (NTA 2025)</h2>
+      <table class="bands-table" id="bands-table">
+        <thead>
+          <tr><th>Band</th><th>Rate</th><th>Taxable Amount</th><th>Tax</th></tr>
+        </thead>
+        <tbody id="bands-body"></tbody>
+      </table>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+      <h3>Want the full Excel / Google Sheets calculator with H1 & H2 filing reports?</h3>
+      <p style="font-size:.82rem;margin-top:4px;color:rgba(255,255,255,.8)">WakaTax 1.0 — complete tool with income log, deduction tracker, print reports and VAT tracker</p>
+      <a href="https://selar.co" target="_blank" id="selar-link">🛒 Get WakaTax on Selar</a>
+      <a href="https://youtube.com" target="_blank" id="yt-link" class="yt">▶ NaijaMoneyGuide on YouTube</a>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <strong>⚠️ Disclaimer:</strong> This tool is based on the <strong>Nigeria Tax Act 2025 as gazetted</strong>.
+    It is a personal planning and awareness tool only — it does not constitute professional tax advice and must
+    not be relied upon as a substitute for a qualified tax practitioner. Users are responsible for verifying
+    their specific tax status with the <strong>Nigeria Revenue Service (NRS)</strong>.
+    The NRS may issue new Circulars or administrative guidelines at any time —
+    always verify at <a href="https://nrs.gov.ng" target="_blank">nrs.gov.ng</a> before filing.
+    WakaTax and its creator accept no liability for any tax assessment, penalty, interest, or financial
+    loss arising from use of this tool.<br><br>
+    <strong>© 2026 Sunny Aniekan Simonson | NaijaMoneyGuide | WakaTax 1.0</strong>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  WakaTax Nigeria 2026 &nbsp;|&nbsp; NaijaMoneyGuide &nbsp;|&nbsp; © 2026 Sunny Aniekan Simonson<br>
+  Licensed for single personal use only. Redistribution or resale prohibited.
+</footer>
+
+<script>
+// ── WakaTax NTA 2025 Calculator Engine ──────────────────────────────────
+function fmt(n) {
+  return '\u20a6' + Math.round(n).toLocaleString('en-NG');
+}
+
+function calculateWakaTax(annualIncome, annualDeductions) {
+  var taxable = Math.max(0, annualIncome - annualDeductions);
+  if (taxable <= 800000) return {
+    annualTax:0, monthlyTax:0, effectiveRate:0,
+    takeHomeAnnual: annualIncome, takeHomeMonthly: annualIncome/12,
+    taxable: taxable, bands: []
+  };
+  var above = taxable - 800000;
+  var tax = 0;
+  var bands = [];
+
+  var defs = [
+    {label:'Above ₦800K exemption', width:2000000, rate:0.15},
+    {label:'₦2.8M – ₦5.8M',        width:3000000, rate:0.18},
+    {label:'₦5.8M – ₦10.8M',       width:5000000, rate:0.21},
+    {label:'₦10.8M – ₦20M',        width:9200000, rate:0.23},
+    {label:'Above ₦20M',           width:Infinity, rate:0.25}
+  ];
+
+  var remaining = above;
+  for (var i=0; i<defs.length; i++) {
+    var slice = Math.min(remaining, defs[i].width);
+    var bandTax = slice * defs[i].rate;
+    if (slice > 0) {
+      bands.push({label:defs[i].label, rate:defs[i].rate, taxable:slice, tax:bandTax});
+    }
+    tax += bandTax;
+    remaining -= slice;
+    if (remaining <= 0) break;
+  }
+
+  return {
+    annualTax: Math.round(tax),
+    monthlyTax: Math.round(tax / 12),
+    effectiveRate: taxable > 0 ? tax/taxable : 0,
+    takeHomeAnnual: Math.round(annualIncome - tax),
+    takeHomeMonthly: Math.round((annualIncome - tax) / 12),
+    taxable: taxable,
+    bands: bands
+  };
+}
+
+function calculate() {
+  var monthly   = parseFloat(document.getElementById('monthly').value) || 0;
+  var passthru  = parseFloat(document.getElementById('passthru').value) || 0;
+  var pension   = parseFloat(document.getElementById('pension').value) || 0;
+  var nhf       = parseFloat(document.getElementById('nhf').value) || 0;
+
+  if (monthly <= 0) { alert('Please enter your monthly income.'); return; }
+
+  var annualGross     = (monthly - passthru) * 12;
+  var annualDeductions = (pension + nhf) * 12;
+  var result = calculateWakaTax(annualGross, annualDeductions);
+
+  document.getElementById('r-annual-tax').textContent  = fmt(result.annualTax);
+  document.getElementById('r-monthly-tax').textContent = fmt(result.monthlyTax) + '/month';
+  document.getElementById('r-eff-rate').textContent    = (result.effectiveRate*100).toFixed(1) + '%';
+  document.getElementById('r-takehome').textContent    = fmt(result.takeHomeMonthly) + '/mo';
+  document.getElementById('r-annual-gross').textContent= fmt(annualGross);
+  document.getElementById('r-taxable').textContent     = fmt(result.taxable);
+
+  // Band breakdown table
+  var tbody = document.getElementById('bands-body');
+  tbody.innerHTML = '';
+  // Tax-free row
+  var freeRow = tbody.insertRow();
+  freeRow.innerHTML = '<td>₦800K exemption</td><td>0%</td><td>' + fmt(Math.min(result.taxable,800000)) + '</td><td class="zero">₦0</td>';
+  result.bands.forEach(function(b) {
+    var tr = tbody.insertRow();
+    tr.className = 'active-band';
+    tr.innerHTML = '<td>' + b.label + '</td><td>' + (b.rate*100).toFixed(0) + '%</td>' +
+                   '<td>' + fmt(b.taxable) + '</td><td>' + fmt(b.tax) + '</td>';
+  });
+  // Total row
+  var totalRow = tbody.insertRow();
+  totalRow.style.fontWeight='bold'; totalRow.style.background='#e8f5ee';
+  totalRow.innerHTML = '<td colspan="3" style="text-align:right">TOTAL ANNUAL TAX</td><td style="color:#0A4D2C">' + fmt(result.annualTax) + '</td>';
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function clearResults() {
+  document.getElementById('results').style.display = 'none';
+}
+
+function updateHints() {
+  var type = document.getElementById('workerType').value;
+  var hints = {
+    salary:     'Enter your total monthly pay before any deductions.',
+    freelancer: 'Enter your average monthly income. Use Pass-Through to subtract client reimbursements.',
+    trader:     'Enter your monthly revenue. Use Pass-Through to subtract stock/inventory purchased for clients.',
+    artisan:    'Enter your average monthly earnings. Every naira you keep from your work counts.'
+  };
+  document.getElementById('hint').textContent = hints[type] || '';
+}
+
+// Update Selar/YouTube links — edit these after you list on Selar
+// document.getElementById('selar-link').href = 'https://selar.co/yourstore';
+// document.getElementById('yt-link').href = 'https://youtube.com/@NaijaMoneyGuide';
+
+updateHints();
+</script>
+</body>
+</html>
